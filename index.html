@@ -93,8 +93,45 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p><img src="https://raw.githubusercontent.com/suuseL/blog_images/main/42fb4d70c0b0446a43fe4035ff081e82.png"></p>
-
+        <h1 id="相关标志位和字段"><a href="#相关标志位和字段" class="headerlink" title="相关标志位和字段"></a>相关标志位和字段</h1><ul>
+<li>SYN（同步标志位）</li>
+<li>ACK（确认标志位）</li>
+<li>seq（数据包序列号字段）：32位无符号数。用于标识数据包的顺序，表示该报文段中第一个数据字节在TCP字节流中的序号。</li>
+<li>ack（数据包确认号字段）：32位无符号数。表示期望对方继续发送的数据包的序列号。</li>
+</ul>
+<p>tips：SYN，ACK，FIN这些大写的单词表示标志位，而seq，ack这些小写的单词表示字段。</p>
+<h1 id="TCP三次握手流程"><a href="#TCP三次握手流程" class="headerlink" title="TCP三次握手流程"></a>TCP三次握手流程</h1><ol>
+<li>客户端浏览器访问服务端网站时，首先向服务端发送SYN报文段，请求建立连接；</li>
+<li>服务端收到客户端的请求后，生成自己的ISN，并回复SYN-ACK报文段，确认客户端的连接请求；</li>
+<li>客户端收到连接请求后，发送ACK报文段，完成连接建立。</li>
+</ol>
+<h3 id="简记"><a href="#简记" class="headerlink" title="简记"></a>简记</h3><ol>
+<li>客户端 -&gt; 服务端：发送 <em><strong>SYN&#x3D;1，ACK&#x3D;0</strong></em> 包（请求建立连接）；</li>
+<li>服务端 -&gt; 客户端：发送 <em><strong>SYN&#x3D;1，ACK&#x3D;1</strong></em> 包（确认连接请求并发送自身序列号）；</li>
+<li>客户端 -&gt; 服务端：发送 <em><strong>SYN&#x3D;0，ACK&#x3D;1</strong></em> 包（确认服务端响应完成连接建立）。</li>
+</ol>
+<h2 id="第一次握手"><a href="#第一次握手" class="headerlink" title="第一次握手"></a>第一次握手</h2><p>客户端向服务端发送一个 _<strong>SYN</strong>_（同步）数据包，其中包含客户端的初始 ISN（ISN是一个随机值，用来标识数据包的顺序）。</p>
+<h3 id="标志位和字段值"><a href="#标志位和字段值" class="headerlink" title="标志位和字段值"></a>标志位和字段值</h3><ul>
+<li>SYN&#x3D;1（表示请求建立连接）</li>
+<li>ACK&#x3D;0（表示不携带确认信息）</li>
+<li>seq&#x3D;x（客户端随机生成的随机数，如1000）</li>
+<li>ack&#x3D;0（因为是第一个报文，尚未收到对方的序列号）</li>
+</ul>
+<h2 id="第二次握手"><a href="#第二次握手" class="headerlink" title="第二次握手"></a>第二次握手</h2><p>服务端收到客户端的 <em><strong>SYN</strong></em> 报文段后，检查客户端的 <em><strong>IP</strong></em> 和 _**端口 **_是否合法，若合法，则回复 _<strong>SYN-ACK</strong>_（同步确认）报文段。</p>
+<h3 id="标志位和字段值-1"><a href="#标志位和字段值-1" class="headerlink" title="标志位和字段值"></a>标志位和字段值</h3><ul>
+<li>SYN&#x3D;1（表示同意建立连接）</li>
+<li>ACK&#x3D;1（表示确认客户端的SYN）</li>
+<li>seq&#x3D;y（服务端生成的随机数，如2000）</li>
+<li>ack&#x3D;x+1（客户端的ISN+1，即1001）</li>
+</ul>
+<h2 id="第三次握手"><a href="#第三次握手" class="headerlink" title="第三次握手"></a>第三次握手</h2><p>客户端收到 <em><strong>SYN-ACK</strong></em> 报文段后，检查服务端的 IP 和 端口 是否合法，若合法，则发送 ACK（确认）报文段。</p>
+<h3 id="标志位和字段值-2"><a href="#标志位和字段值-2" class="headerlink" title="标志位和字段值"></a>标志位和字段值</h3><ul>
+<li>SYN&#x3D;0</li>
+<li>ACK&#x3D;1（表示确认服务端的SYN）</li>
+<li>seq&#x3D;x+1（客户端的ISN+1，如1001）</li>
+<li>ack&#x3D;y+1（服务端的ISN+1，如2001）</li>
+</ul>
+<h1 id="TCP四次挥手"><a href="#TCP四次挥手" class="headerlink" title="TCP四次挥手"></a>TCP四次挥手</h1>
       
     </div>
     <footer class="article-footer">
