@@ -110,6 +110,7 @@
 <li>服务端 -&gt; 客户端：发送 <em><strong>SYN&#x3D;1，ACK&#x3D;1</strong></em> 包（确认连接请求并发送自身序列号）；</li>
 <li>客户端 -&gt; 服务端：发送 <em><strong>SYN&#x3D;0，ACK&#x3D;1</strong></em> 包（确认服务端响应完成连接建立）。</li>
 </ol>
+<p><img src="https://raw.githubusercontent.com/suuseL/blog_images/main/images/0069a579daab4a5f6a81bdcf183785f4.png"></p>
 <h2 id="第一次握手"><a href="#第一次握手" class="headerlink" title="第一次握手"></a>第一次握手</h2><p>客户端向服务端发送一个 _<strong>SYN</strong>_（同步）数据包，其中包含客户端的初始 ISN（ISN是一个随机值，用来标识数据包的顺序）。</p>
 <h3 id="标志位和字段值"><a href="#标志位和字段值" class="headerlink" title="标志位和字段值"></a>标志位和字段值</h3><ul>
 <li>SYN&#x3D;1（表示请求建立连接）</li>
@@ -131,7 +132,46 @@
 <li>seq&#x3D;x+1（客户端的ISN+1，如1001）</li>
 <li>ack&#x3D;y+1（服务端的ISN+1，如2001）</li>
 </ul>
-<h1 id="TCP四次挥手"><a href="#TCP四次挥手" class="headerlink" title="TCP四次挥手"></a>TCP四次挥手</h1>
+<h1 id="TCP四次挥手流程"><a href="#TCP四次挥手流程" class="headerlink" title="TCP四次挥手流程"></a>TCP四次挥手流程</h1><ol>
+<li>客户端完成数据传输后，向服务端发送 <em><strong>FIN</strong></em> 报文段，请求关闭连接；</li>
+<li>服务端收到 <em><strong>FIN</strong></em> 报文段后，回复 _**ACK **_报文段，确认关闭请求；</li>
+<li>服务端完成数据传输后，发送 <em><strong>FIN</strong></em> 报文段，请求关闭连接；</li>
+<li>客户端收到 <em><strong>FIN</strong></em> 报文段后，回复 <em><strong>ACK</strong></em> 报文段，确认连接关闭。</li>
+</ol>
+<h3 id="简记-1"><a href="#简记-1" class="headerlink" title="简记"></a>简记</h3><ol>
+<li>客户端 -&gt; 服务端：FIN&#x3D;1，ACK&#x3D;1（请求关闭连接）；</li>
+<li>服务端 -&gt; 客户端：FIN&#x3D;0，ACK&#x3D;1（确认关闭请求）；</li>
+<li>服务端 -&gt; 客户端：FIN&#x3D;1，ACK&#x3D;0（请求关闭连接）；</li>
+<li>客户端 -&gt; 服务端：FIN&#x3D;0，ACK&#x3D;1（确认连接关闭）；</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/suuseL/blog_images/main/images/47c0d578e660c7bf72069a6545053cff.png"></p>
+<h2 id="第一次挥手"><a href="#第一次挥手" class="headerlink" title="第一次挥手"></a>第一次挥手</h2><p>客户端或服务端决定关闭连接时，一方发送 <em><strong>FIN</strong></em> 报文段，表示不再发送数据。</p>
+<h3 id="标志位"><a href="#标志位" class="headerlink" title="标志位"></a>标志位</h3><ul>
+<li>FIN&#x3D;1（表示请求关闭连接）</li>
+<li>ACK&#x3D;1（表示确认已接收的数据）</li>
+<li>seq&#x3D;当前序列号</li>
+<li>ack&#x3D;对方已接收的序列号+1</li>
+</ul>
+<h2 id="第二次挥手"><a href="#第二次挥手" class="headerlink" title="第二次挥手"></a>第二次挥手</h2><p>对方收到 <em><strong>FIN</strong></em> 报文段后，回复 <em><strong>ACK</strong></em> 报文段，表示已收到关闭请求。</p>
+<h3 id="标志位-1"><a href="#标志位-1" class="headerlink" title="标志位"></a>标志位</h3><ul>
+<li>ACK&#x3D;1（表示确认FIN）</li>
+<li>seq&#x3D;当前序列号</li>
+<li>ack&#x3D;对方的序列号+1</li>
+</ul>
+<h2 id="第三次挥手"><a href="#第三次挥手" class="headerlink" title="第三次挥手"></a>第三次挥手</h2><p>被动方完成数据传输后，发送 <em><strong>FIN</strong></em> 报文段，表示请求关闭连接。</p>
+<h3 id="标志位-2"><a href="#标志位-2" class="headerlink" title="标志位"></a>标志位</h3><ul>
+<li>FIN&#x3D;1（表示请求关闭连接）</li>
+<li>ACK&#x3D;1（表示确认已接收的数据）</li>
+<li>seq&#x3D;当前序列号</li>
+<li>ack&#x3D;对方已接收的序列号+1</li>
+</ul>
+<h2 id="第四次挥手"><a href="#第四次挥手" class="headerlink" title="第四次挥手"></a>第四次挥手</h2><p>主动方收到 <em><strong>FIN</strong></em> 报文段后，发送 <em><strong>ACK</strong></em> 报文段，表示已收到关闭请求。</p>
+<h3 id="标志位-3"><a href="#标志位-3" class="headerlink" title="标志位"></a>标志位</h3><ul>
+<li>ACK&#x3D;1（表示确认FIN）</li>
+<li>seq&#x3D;当前序列号</li>
+<li>ack&#x3D;对方序列号+1</li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
